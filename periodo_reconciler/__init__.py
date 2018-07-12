@@ -15,6 +15,10 @@ class RProperty(object):
     def to_dict(self):
         return {self.p: self.v}
 
+    def __repr__(self):
+        return ("""RProperty({}, {})"""
+                .format(json.dumps(self.p), json.dumps(self.v)))
+
 
 class RQuery(object):
     def __init__(self, query, label=None, limit=None, properties=None):
@@ -35,11 +39,37 @@ class RQuery(object):
 
         return (self.label, v)
 
+    def __repr__(self):
+        if self.properties is not None:
+            properties_repr = (""", properties=[{}]"""
+                               .format(",\n".join([repr(p)
+                                                  for p in self.properties])))
+        else:
+            properties_repr = ""
+
+        if self.limit is not None:
+            limit_repr = ", limit={}".format(json.dumps(self.limit))
+        else:
+            limit_repr = ""
+
+        return ("""RQuery({}, label={}{}{})"""
+                .format(json.dumps(self.query),
+                        json.dumps(
+                    self.label),
+                    limit_repr,
+                    properties_repr))
+
 
 class PeriodoReconciler(object):
     def __init__(self, host='localhost:8142', protocol='http'):
         self.host = host
+        self.protocol = protocol
         self.base_url = '{}://{}/'.format(protocol, host)
+
+    def __repr__(self):
+        return ("""PeriodoReconciler(host={}, protocol={})"""
+                .format(json.dumps(self.host),
+                        json.dumps(self.protocol)))
 
     def describe(self):
         r = requests.get(self.base_url)

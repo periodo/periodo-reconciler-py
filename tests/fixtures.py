@@ -6,6 +6,7 @@ from periodo_reconciler import (
     PeriodoReconciler
 )
 
+
 @pytest.fixture
 def p_recon():
-	return PeriodoReconciler(host='localhost:8142')
+    return PeriodoReconciler(host='localhost:8142')

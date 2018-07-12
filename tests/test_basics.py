@@ -102,3 +102,38 @@ def test_preview_flyout(p_recon):
     r = p_recon.preview_period(
         'http://n2t.net/ark:/99152/p0fp7wvjvn8',  flyout=True)
     assert 'html' in json.loads(r.decode('utf-8')).keys()
+
+
+def test_repr_PeriodoReconciler(p_recon):
+    assert (repr(p_recon) ==
+            """PeriodoReconciler(host="localhost:8142", protocol="http")""")
+
+
+def test_repr_RProperty():
+    assert (repr(RProperty('location', 'Ukraine')) ==
+            """RProperty("location", "Ukraine")"""
+            )
+
+
+def test_repr_RQuery():
+    assert (repr(RQuery("bronze age", label="limited-query", limit=1)) ==
+            """RQuery("bronze age", label="limited-query", limit=1)""")
+
+    q = RQuery("Ранньоримський",
+               label="additional-properties-query", properties=[
+                   RProperty('location', 'Ukraine'),
+                   RProperty('start', 200),
+                   RProperty('end', 600)
+               ])
+
+    assert(repr(q) ==
+           ('RQuery("\\u0420\\u0430\\u043d\\u043d\\u044c\\u043e' +
+            '\\u0440\\u0438\\u043c\\u0441\\u044c\\u043a\\u0438\\u0439", ' +
+            'label="additional-properties-query", ' +
+            'properties=[RProperty("location", "Ukraine"),' +
+            '\nRProperty("start", 200),\nRProperty("end", 600)])'))
+
+
+def test_RQuery_none_label():
+    q = RQuery("bronze age")
+    assert q.label is not None
