@@ -1,10 +1,29 @@
+import csv
 import requests
 import json
 import uuid
 from collections import OrderedDict
 import urllib.parse
 
-__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler']
+__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler']
+
+
+# http://stackoverflow.com/questions/2348317/how-to-write-a-pager-for-python-iterators/2350904#2350904
+def grouper(iterable, page_size):
+    page = []
+    for item in iterable:
+        page.append(item)
+        if len(page) == page_size:
+            yield page
+            page = []
+    if len(page) > 0:
+        yield page
+
+
+def non_none_values(dict_):
+    return dict([
+        (k, v) for (k, v) in dict_.items() if v is not None
+    ])
 
 
 class RProperty(object):
@@ -40,10 +59,10 @@ class RQuery(object):
         return (self.label, v)
 
     def __repr__(self):
-        if self.properties is not None:
+        if (self.properties is not None) and (len(self.properties)):
             properties_repr = (""", properties=[{}]"""
                                .format(",\n".join([repr(p)
-                                                  for p in self.properties])))
+                                                   for p in self.properties])))
         else:
             properties_repr = ""
 
@@ -120,3 +139,96 @@ class PeriodoReconciler(object):
             return r.content
         else:
             r.raise_for_status()
+
+
+class CsvReconciler(object):
+    def __init__(self, csvfile, p_recon, query,
+                 location=None, start=None, stop=None, page_size=100):
+        self.csvfile = csvfile
+        self.p_recon = p_recon
+        self.query = query
+        self.location = location
+        self.start = start
+        self.stop = stop
+        self.page_size = page_size
+
+        self.reader = csv.DictReader(csvfile)
+
+        # check that query, location, start, stop are in fieldnames
+
+        for f in [query, location, start, stop]:
+            if f is not None:
+                assert f in self.reader.fieldnames
+
+        # which properties are included?
+        self.included_properties = non_none_values({
+            'location': location,
+            'start': start,
+            'stop': stop
+        })
+
+    def results_with_rows(self):
+        for (i, page) in enumerate(grouper(self.reader, self.page_size)):
+            queries = []
+
+            # TO DO: I might be unnecessarily reproducing the page in memory
+            page_dict = OrderedDict()
+
+            for (j, row) in enumerate(page):
+                label = str(j)
+                page_dict[label] = row
+
+                queries.append(RQuery(
+                    row[self.query],
+                    label=label,
+                    properties=[
+                        RProperty(p, row[v]) for (p, v)
+                        in self.included_properties.items()
+                    ]
+                ))
+
+            responses = self.p_recon.reconcile(queries, method='post')
+
+            for (label, row) in page_dict.items():
+                yield(row, responses[label])
+
+    def matches(self, results_with_rows=None):
+
+        # assume that the new match_* names are not already field names
+        assert len(set(self.reader.fieldnames) &
+                   set(['match_num', 'match_name', 'match_id'])) == 0
+
+        if results_with_rows is None:
+            results_with_rows = self.results_with_rows()
+
+        for (row, response) in results_with_rows:
+            results = response['result']
+            matching_results = [
+                result for result in results if result['match']]
+            num_matches = len(matching_results)
+
+            # assume for now
+            assert num_matches < 2
+            if num_matches == 1:
+                match_name = results[0]['name']
+                match_id = results[0]['id']
+            else:
+                match_name = ''
+                match_id = ''
+
+            row['match_num'] = num_matches
+            row['match_name'] = match_name
+            row['match_id'] = match_id
+
+            yield (row)
+
+    def to_csv(self, csvfile, rows, fieldnames=None):
+        if fieldnames is None:
+            fieldnames = (self.reader.fieldnames +
+                          ['match_num', 'match_name', 'match_id'])
+
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
