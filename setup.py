@@ -2,10 +2,11 @@ from setuptools import setup, find_packages
 import sys
 import os
 
-version = '0.0.6'
+version = '0.0.7'
 
 requirements = [
     'requests',
+    'click'
 ]
 
 
@@ -33,6 +34,7 @@ Open Refine reconciliation service for PeriodO data""",
               'pytest-cov'
           ]
       },
+      scripts=['bin/periodo-reconciler-py'],
       entry_points="""
       # -*- Entry points: -*-
       """,

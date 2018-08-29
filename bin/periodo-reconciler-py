@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+from periodo_reconciler import (
+    RProperty,
+    RQuery,
+    PeriodoReconciler,
+    CsvReconciler, 
+    non_none_values
+)
+
+import click
+
+
+@click.command()
+@click.argument('input', type=click.File('r'))
+@click.argument('output', type=click.File('w'))
+@click.option('--query', prompt=True,
+                 help='column of query')
+@click.option('--start', default=None,
+                 help='column of start')
+@click.option('--stop', default=None,
+                 help='column of stop')
+@click.option('--location', default=None,
+                 help='column of location')
+def reconcile(input, output, query, start, stop, location):
+
+    p_recon = PeriodoReconciler(host='localhost:8142')
+
+    kw = non_none_values({
+        'query': query,
+        'start': start,
+        'stop': stop,
+        'location': location
+    })
+
+    c_recon = CsvReconciler(input, p_recon, **kw)
+    matches = list(c_recon.matches())
+
+    c_recon.to_csv(output, matches)
+
+
+if __name__ == '__main__':
+    reconcile()
