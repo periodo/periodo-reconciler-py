@@ -1,11 +1,12 @@
 import csv
 import requests
+import io
 import json
 import uuid
 from collections import OrderedDict
 import urllib.parse
 
-__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler']
+__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_none_values']
 
 
 # http://stackoverflow.com/questions/2348317/how-to-write-a-pager-for-python-iterators/2350904#2350904
@@ -132,7 +133,6 @@ class PeriodoReconciler(object):
             params['flyout'] = True
 
         url = urllib.parse.urljoin(self.base_url, '/preview')
-        print(url, params)
         r = requests.get(urllib.parse.urljoin(
             self.base_url, '/preview'), params=params)
         if r.status_code == 200:
@@ -143,14 +143,23 @@ class PeriodoReconciler(object):
 
 class CsvReconciler(object):
     def __init__(self, csvfile, p_recon, query,
-                 location=None, start=None, stop=None, page_size=100):
+                 location=None, start=None, stop=None, 
+                 ignored_queries='', page_size=100):
         self.csvfile = csvfile
         self.p_recon = p_recon
         self.query = query
         self.location = location
         self.start = start
         self.stop = stop
+        self.ignored_queries = ignored_queries
         self.page_size = page_size
+
+
+        c_reader = csv.reader(io.StringIO(self.ignored_queries))
+        try:
+            self.ignored_queries_set = set(next(c_reader))
+        except:
+            self.ignored_queries_set = set()
 
         self.reader = csv.DictReader(csvfile)
 
@@ -166,6 +175,7 @@ class CsvReconciler(object):
             'start': start,
             'stop': stop
         })
+
 
     def results_with_rows(self):
         for (i, page) in enumerate(grouper(self.reader, self.page_size)):
@@ -219,6 +229,14 @@ class CsvReconciler(object):
             row['match_num'] = num_matches
             row['match_name'] = match_name
             row['match_id'] = match_id
+
+            # if the query matches any entry in ignored_queries,
+            # throw out the match
+
+            if row[self.query] in self.ignored_queries_set:
+                row['match_num'] = 0
+                row['match_name'] = ''
+                row['match_id'] = ''
 
             yield (row)
 

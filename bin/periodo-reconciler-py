@@ -22,7 +22,9 @@ import click
                  help='column of stop')
 @click.option('--location', default=None,
                  help='column of location')
-def reconcile(input, output, query, start, stop, location):
+@click.option('--ignored_queries', default='',
+                 help='comma-separated string of queries to ignore')
+def reconcile(input, output, query, start, stop, location, ignored_queries):
 
     p_recon = PeriodoReconciler(host='localhost:8142')
 
@@ -30,7 +32,8 @@ def reconcile(input, output, query, start, stop, location):
         'query': query,
         'start': start,
         'stop': stop,
-        'location': location
+        'location': location,
+        'ignored_queries': ignored_queries
     })
 
     c_recon = CsvReconciler(input, p_recon, **kw)
