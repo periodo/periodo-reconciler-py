@@ -8,6 +8,8 @@ import urllib.parse
 
 __all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_none_values']
 
+# a wrapper for https://github.com/periodo/periodo-reconciler/blob/master/API.md
+
 
 # http://stackoverflow.com/questions/2348317/how-to-write-a-pager-for-python-iterators/2350904#2350904
 def grouper(iterable, page_size):
