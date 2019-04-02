@@ -12,9 +12,26 @@ __all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_non
 
 
 # http://stackoverflow.com/questions/2348317/how-to-write-a-pager-for-python-iterators/2350904#2350904
-def grouper(iterable, page_size):
+def grouper(iterator, page_size):
+    """
+    yield pages of results from input interable
+
+
+    Parameters
+    ----------
+    iterator : Python interator
+        the iterator to be converted into pages
+    page_size : int
+        page size
+
+    Returns
+    -------
+    iterator
+        a iterator of pages
+
+    """
     page = []
-    for item in iterable:
+    for item in iterator:
         page.append(item)
         if len(page) == page_size:
             yield page
@@ -147,6 +164,11 @@ class CsvReconciler(object):
     def __init__(self, csvfile, p_recon, query,
                  location=None, start=None, stop=None, 
                  ignored_queries='', page_size=100):
+
+        """
+        """
+
+
         self.csvfile = csvfile
         self.p_recon = p_recon
         self.query = query
@@ -156,6 +178,10 @@ class CsvReconciler(object):
         self.ignored_queries = ignored_queries
         self.page_size = page_size
 
+ 
+        # if the query matches any entry in ignored_queries,
+        # throw out the match
+        # using csv.reader to parse ignored_queries because the parameter is a comma=delimited list
 
         c_reader = csv.reader(io.StringIO(self.ignored_queries))
         try:
@@ -166,7 +192,7 @@ class CsvReconciler(object):
         self.reader = csv.DictReader(csvfile)
 
         # check that query, location, start, stop are in fieldnames
-
+        # TO DO: I may want to move away from using assert
         for f in [query, location, start, stop]:
             if f is not None:
                 assert f in self.reader.fieldnames
@@ -180,6 +206,10 @@ class CsvReconciler(object):
 
 
     def results_with_rows(self):
+
+        # bin the input rows into pages and then feed the pages to the reconciler
+        # from the reconciler, yield each result
+
         for (i, page) in enumerate(grouper(self.reader, self.page_size)):
             queries = []
 
@@ -205,13 +235,19 @@ class CsvReconciler(object):
                 yield(row, responses[label])
 
     def matches(self, results_with_rows=None):
+        """
+        this method process the results to return only matches
+        """
 
         # assume that the new match_* names are not already field names
         assert len(set(self.reader.fieldnames) &
                    set(['match_num', 'match_name', 'match_id'])) == 0
 
+        # return matches from the entire CSV if
+        # we're not processing the inputted subset of results
         if results_with_rows is None:
             results_with_rows = self.results_with_rows()
+
 
         for (row, response) in results_with_rows:
             results = response['result']
@@ -219,8 +255,10 @@ class CsvReconciler(object):
                 result for result in results if result['match']]
             num_matches = len(matching_results)
 
-            # assume for now
+            # I think that number of matches must be 0 or 1
+            # otherwise: a bug in the reconciler
             assert num_matches < 2
+
             if num_matches == 1:
                 match_name = results[0]['name']
                 match_id = results[0]['id']
@@ -232,8 +270,7 @@ class CsvReconciler(object):
             row['match_name'] = match_name
             row['match_id'] = match_id
 
-            # if the query matches any entry in ignored_queries,
-            # throw out the match
+            # eliminate results in which the query is ignored_queries,
 
             if row[self.query] in self.ignored_queries_set:
                 row['match_num'] = 0
