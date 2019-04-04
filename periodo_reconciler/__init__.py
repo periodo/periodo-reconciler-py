@@ -52,7 +52,7 @@ class RProperty(object):
         self.v = v
 
     def to_dict(self):
-        return {self.p: self.v}
+        return {'p': self.p, 'v': self.v}
 
     def __repr__(self):
         return ("""RProperty({}, {})"""
@@ -163,7 +163,7 @@ class PeriodoReconciler(object):
 class CsvReconciler(object):
     def __init__(self, csvfile, p_recon, query,
                  location=None, start=None, stop=None, 
-                 ignored_queries='', page_size=100):
+                 ignored_queries='', page_size=1000):
 
         """
         """
@@ -232,6 +232,7 @@ class CsvReconciler(object):
             responses = self.p_recon.reconcile(queries, method='post')
 
             for (label, row) in page_dict.items():
+                print ('\r results_with_rows', i, label, end="")
                 yield(row, responses[label])
 
     def matches(self, results_with_rows=None):

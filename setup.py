@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import sys
 import os
 
-version = '0.0.9'
+version = '0.1.0'
 
 requirements = [
     'requests',
