@@ -3,11 +3,15 @@ import pytest
 from periodo_reconciler import (
     RProperty,
     RQuery,
-    PeriodoReconciler
+    PeriodoReconciler,
+    grouper
 )
 
 from .fixtures import p_recon
 
+def test_grouper():
+  k = range(10)
+  assert list(grouper(k,2)) == [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]
 
 def test_describe(p_recon):
     assert set(p_recon.describe().keys()) == {'defaultTypes',

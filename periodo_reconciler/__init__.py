@@ -6,7 +6,7 @@ import uuid
 from collections import OrderedDict
 import urllib.parse
 
-__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_none_values']
+__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_none_values', 'grouper']
 
 # a wrapper for https://github.com/periodo/periodo-reconciler/blob/master/API.md
 
