@@ -52,3 +52,17 @@ def test_to_csv(p_recon):
         assert 'match_id' in reader.fieldnames
 
     os.remove(output_path)
+
+def test_ignored_queries(p_recon):
+
+    # ignore the query == "bronze age"
+
+    csv_path = "test-data/periodo_simple_example.csv"
+    csvfile = open(csv_path)
+    c_recon = CsvReconciler(csvfile, p_recon, 'query',
+                            'location', 'start', 'end',
+                            ignored_queries='bronze age')
+    rows = list(c_recon.matches())
+    for row in rows:
+        if row['query'] == 'bronze age':
+            assert row['match_num'] == 0
