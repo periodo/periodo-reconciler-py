@@ -5,8 +5,11 @@ import json
 import uuid
 from collections import OrderedDict
 import urllib.parse
+from functools import lru_cache
 
-__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_none_values', 'grouper']
+CACHE_MAX_SIZE=65536
+
+__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_none_values', 'grouper', 'CACHE_MAX_SIZE']
 
 # a wrapper for https://github.com/periodo/periodo-reconciler/blob/master/API.md
 
@@ -114,23 +117,54 @@ class PeriodoReconciler(object):
         r = requests.get(self.base_url)
         return r.json()
 
-    def reconcile(self, queries, method='GET'):
-        queries_dict = OrderedDict([q.to_key_value() for q in queries])
+    @lru_cache(maxsize=CACHE_MAX_SIZE)
+    def _call_reconciler(self, query_dict_json, method='GET'):
+        if method.upper() == 'GET':
+            r = requests.get(self.base_url, params={
+                             'queries': query_dict_json})
+        elif method.upper() == 'POST':
+            r = requests.post(self.base_url, data={
+                              'queries': query_dict_json})
 
+        if r.status_code == 200:
+            return r.json()
+        else:
+            r.raise_for_status()
+
+    
+    def _reconcile_query_by_query(self, queries, method='GET'):
+        
+        queries_dict = OrderedDict([q.to_key_value() for q in queries])
+        results_dict = dict()
+        
+        for (k,v) in queries_dict.items():
+            # don't let the label for the query mess up the caching
+            query_dict = {'_':v}
+            query_dict_json = json.dumps(query_dict, sort_keys=True)
+            result = self._call_reconciler(query_dict_json, method)
+            results_dict[k] = result['_']
+                
+        return results_dict
+
+    def reconcile(self, queries, method='GET', query_by_query=False):
+        
+        if query_by_query:
+            return self._reconcile_query_by_query(queries, method)
+
+        queries_dict = OrderedDict([q.to_key_value() for q in queries])
+    
         if method.upper() == 'GET':
             r = requests.get(self.base_url, params={
                              'queries': json.dumps(queries_dict)})
-            if r.status_code == 200:
-                return r.json()
-            else:
-                r.raise_for_status()
         elif method.upper() == 'POST':
             r = requests.post(self.base_url, data={
                               'queries': json.dumps(queries_dict)})
-            if r.status_code == 200:
-                return r.json()
-            else:
-                r.raise_for_status()
+    
+        if r.status_code == 200:
+            return r.json()
+        else:
+            r.raise_for_status()
+
 
     def suggest_properties(self):
         r = requests.get(urllib.parse.urljoin(
@@ -163,7 +197,10 @@ class PeriodoReconciler(object):
 class CsvReconciler(object):
     def __init__(self, csvfile, p_recon, query,
                  location=None, start=None, stop=None, 
-                 ignored_queries='', page_size=1000):
+                 ignored_queries='', 
+                 transpose_query=False,
+                 page_size=1000,
+                 query_by_query=True):
 
         """
         """
@@ -176,7 +213,9 @@ class CsvReconciler(object):
         self.start = start
         self.stop = stop
         self.ignored_queries = ignored_queries
+        self.transpose_query = transpose_query
         self.page_size = page_size
+        self.query_by_query = query_by_query
 
  
         # if the query matches any entry in ignored_queries,
@@ -229,10 +268,11 @@ class CsvReconciler(object):
                     ]
                 ))
 
-            responses = self.p_recon.reconcile(queries, method='post')
+            responses = self.p_recon.reconcile(queries, method='post', 
+                query_by_query=self.query_by_query)
 
             for (label, row) in page_dict.items():
-                print ('\r results_with_rows', i, label, end="")
+                # print ('\r results_with_rows', i, label, end="")
                 yield(row, responses[label])
 
     def matches(self, results_with_rows=None):

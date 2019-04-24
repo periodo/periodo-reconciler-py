@@ -24,7 +24,9 @@ import click
                  help='column of location')
 @click.option('--ignored_queries', default='',
                  help='comma-separated string of queries to ignore')
-def reconcile(input, output, query, start, stop, location, ignored_queries):
+@click.option('--transpose-query/--no-transpose-query', default=False,
+                 help='transpose comma-separated terms in query column')
+def reconcile(input, output, query, start, stop, location, ignored_queries, transpose_query):
 
     p_recon = PeriodoReconciler(host='localhost:8142')
 
@@ -33,7 +35,8 @@ def reconcile(input, output, query, start, stop, location, ignored_queries):
         'start': start,
         'stop': stop,
         'location': location,
-        'ignored_queries': ignored_queries
+        'ignored_queries': ignored_queries,
+        'transpose_query': transpose_query
     })
 
     c_recon = CsvReconciler(input, p_recon, **kw)
