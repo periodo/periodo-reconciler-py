@@ -4,7 +4,7 @@ from periodo_reconciler import (
     RProperty,
     RQuery,
     PeriodoReconciler,
-    CsvReconciler, 
+    CsvReconciler,
     non_none_values
 )
 
@@ -15,18 +15,23 @@ import click
 @click.argument('input', type=click.File('r'))
 @click.argument('output', type=click.File('w'))
 @click.option('--query', prompt=True,
-                 help='column of query')
+              help='column of query')
 @click.option('--start', default=None,
-                 help='column of start')
+              help='column of start')
 @click.option('--stop', default=None,
-                 help='column of stop')
+              help='column of stop')
 @click.option('--location', default=None,
-                 help='column of location')
+              help='column of location')
 @click.option('--ignored_queries', default='',
-                 help='comma-separated string of queries to ignore')
+              help='comma-separated string of queries to ignore')
 @click.option('--transpose-query/--no-transpose-query', default=False,
-                 help='transpose comma-separated terms in query column')
-def reconcile(input, output, query, start, stop, location, ignored_queries, transpose_query):
+              help='transpose comma-separated terms in query column')
+def reconcile(input, output, query, start, stop, location,
+              ignored_queries, transpose_query):
+    """
+    This script reconciles the INPUT csv file
+    to produce the OUTPUT csv file.
+    """
 
     p_recon = PeriodoReconciler(host='localhost:8142')
 

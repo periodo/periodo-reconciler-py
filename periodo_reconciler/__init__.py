@@ -7,11 +7,14 @@ from collections import OrderedDict
 import urllib.parse
 from functools import lru_cache
 
-CACHE_MAX_SIZE=65536
+# for LRU cache
+CACHE_MAX_SIZE = 65536
 
-__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler', 'CsvReconciler', 'non_none_values', 'grouper', 'CACHE_MAX_SIZE']
+__all__ = ['RProperty', 'RQuery', 'PeriodoReconciler',
+           'CsvReconciler', 'non_none_values', 'grouper', 'CACHE_MAX_SIZE']
 
-# a wrapper for https://github.com/periodo/periodo-reconciler/blob/master/API.md
+# a wrapper for
+# https://github.com/periodo/periodo-reconciler/blob/master/API.md
 
 
 # http://stackoverflow.com/questions/2348317/how-to-write-a-pager-for-python-iterators/2350904#2350904
@@ -131,40 +134,38 @@ class PeriodoReconciler(object):
         else:
             r.raise_for_status()
 
-    
     def _reconcile_query_by_query(self, queries, method='GET'):
-        
+
         queries_dict = OrderedDict([q.to_key_value() for q in queries])
         results_dict = dict()
-        
-        for (k,v) in queries_dict.items():
+
+        for (k, v) in queries_dict.items():
             # don't let the label for the query mess up the caching
-            query_dict = {'_':v}
+            query_dict = {'_': v}
             query_dict_json = json.dumps(query_dict, sort_keys=True)
             result = self._call_reconciler(query_dict_json, method)
             results_dict[k] = result['_']
-                
+
         return results_dict
 
     def reconcile(self, queries, method='GET', query_by_query=False):
-        
+
         if query_by_query:
             return self._reconcile_query_by_query(queries, method)
 
         queries_dict = OrderedDict([q.to_key_value() for q in queries])
-    
+
         if method.upper() == 'GET':
             r = requests.get(self.base_url, params={
                              'queries': json.dumps(queries_dict)})
         elif method.upper() == 'POST':
             r = requests.post(self.base_url, data={
                               'queries': json.dumps(queries_dict)})
-    
+
         if r.status_code == 200:
             return r.json()
         else:
             r.raise_for_status()
-
 
     def suggest_properties(self):
         r = requests.get(urllib.parse.urljoin(
@@ -196,15 +197,13 @@ class PeriodoReconciler(object):
 
 class CsvReconciler(object):
     def __init__(self, csvfile, p_recon, query,
-                 location=None, start=None, stop=None, 
-                 ignored_queries='', 
+                 location=None, start=None, stop=None,
+                 ignored_queries='',
                  transpose_query=False,
                  page_size=1000,
                  query_by_query=True):
-
         """
         """
-
 
         self.csvfile = csvfile
         self.p_recon = p_recon
@@ -217,15 +216,15 @@ class CsvReconciler(object):
         self.page_size = page_size
         self.query_by_query = query_by_query
 
- 
         # if the query matches any entry in ignored_queries,
         # throw out the match
-        # using csv.reader to parse ignored_queries because the parameter is a comma=delimited list
+        # using csv.reader to parse ignored_queries because the parameter is
+        # a comma=delimited list
 
         c_reader = csv.reader(io.StringIO(self.ignored_queries))
         try:
             self.ignored_queries_set = set(next(c_reader))
-        except:
+        except StopIteration as e:
             self.ignored_queries_set = set()
 
         self.reader = csv.DictReader(csvfile)
@@ -243,10 +242,23 @@ class CsvReconciler(object):
             'stop': stop
         })
 
+    def _transpose_query(self, q):
+        """
+        transpose only if there is a single ","
+        """
+        if not self.transpose_query:
+            return q
+
+        terms = [term.strip() for term in q.split(",")]
+        if (len(terms) == 2):
+            return terms[1] + " " + terms[0]
+        else:
+            return q
 
     def results_with_rows(self):
 
-        # bin the input rows into pages and then feed the pages to the reconciler
+        # bin the input rows into pages and then feed the pages
+        # to the reconciler
         # from the reconciler, yield each result
 
         for (i, page) in enumerate(grouper(self.reader, self.page_size)):
@@ -260,7 +272,7 @@ class CsvReconciler(object):
                 page_dict[label] = row
 
                 queries.append(RQuery(
-                    row[self.query],
+                    self._transpose_query(row[self.query]),
                     label=label,
                     properties=[
                         RProperty(p, row[v]) for (p, v)
@@ -268,7 +280,9 @@ class CsvReconciler(object):
                     ]
                 ))
 
-            responses = self.p_recon.reconcile(queries, method='post', 
+            responses = self.p_recon.reconcile(
+                queries,
+                method='post',
                 query_by_query=self.query_by_query)
 
             for (label, row) in page_dict.items():
@@ -288,7 +302,6 @@ class CsvReconciler(object):
         # we're not processing the inputted subset of results
         if results_with_rows is None:
             results_with_rows = self.results_with_rows()
-
 
         for (row, response) in results_with_rows:
             results = response['result']
