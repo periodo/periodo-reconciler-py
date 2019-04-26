@@ -26,8 +26,13 @@ import click
               help='comma-separated string of queries to ignore')
 @click.option('--transpose-query/--no-transpose-query', default=False,
               help='transpose comma-separated terms in query column')
+@click.option('--match_column_prefix', default='',
+              help='optional prefix for match related columns')
+@click.option('--match_top_candidate/--no-match_top_candidate', default=True,
+              help='accept top reconciliation candidate as match')
 def reconcile(input, output, query, start, stop, location,
-              ignored_queries, transpose_query):
+              ignored_queries, transpose_query,
+              match_column_prefix, match_top_candidate):
     """
     This script reconciles the INPUT csv file
     to produce the OUTPUT csv file.
@@ -41,7 +46,9 @@ def reconcile(input, output, query, start, stop, location,
         'stop': stop,
         'location': location,
         'ignored_queries': ignored_queries,
-        'transpose_query': transpose_query
+        'transpose_query': transpose_query,
+        'match_column_prefix': match_column_prefix,
+        'match_top_candidate': match_top_candidate
     })
 
     c_recon = CsvReconciler(input, p_recon, **kw)

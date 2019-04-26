@@ -1,6 +1,6 @@
-query,location,start,end,match_num,match_name,match_id
-北宋,,,,1,"Northern Song [China, China: 0960 to 1127]",http://n2t.net/ark:/99152/p0fp7wvjvn8
-bronze age,,,,0,,
-Ранньоримський,Ukraine,200,600,1,"Ранньоримський період [Ukraine, Ukraine: -0049 to 0175]",http://n2t.net/ark:/99152/p06v8w4dbcf
-Late Roman,Cyprus,300,749,1,"Late Roman [Cyprus, Cyprus: 0300 to 0749]",http://n2t.net/ark:/99152/p0dg76fbqff
-"Roman, Late",Cyprus,300,749,0,,
+query,location,start,end,match_num,match_name,match_id,candidates_count
+北宋,,,,1,"Northern Song [China, China: 0960 to 1127]",http://n2t.net/ark:/99152/p0fp7wvjvn8,1
+bronze age,,,,0,"Bronze [Palestine, Israel, Jordan: -3299 to -1199]",http://n2t.net/ark:/99152/p0z3skmnss7,83
+Ранньоримський,Ukraine,200,600,1,"Ранньоримський період [Ukraine, Ukraine: -0049 to 0175]",http://n2t.net/ark:/99152/p06v8w4dbcf,1
+Late Roman,Cyprus,300,749,1,"Late Roman [Cyprus, Cyprus: 0300 to 0749]",http://n2t.net/ark:/99152/p0dg76fbqff,1
+"Roman, Late",Cyprus,300,749,0,,,0

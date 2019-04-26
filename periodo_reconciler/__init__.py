@@ -201,7 +201,9 @@ class CsvReconciler(object):
                  ignored_queries='',
                  transpose_query=False,
                  page_size=1000,
-                 query_by_query=True):
+                 query_by_query=True,
+                 match_column_prefix="",
+                 match_top_candidate=True):
         """
         """
 
@@ -215,6 +217,8 @@ class CsvReconciler(object):
         self.transpose_query = transpose_query
         self.page_size = page_size
         self.query_by_query = query_by_query
+        self.match_column_prefix = match_column_prefix
+        self.match_top_candidate = match_top_candidate
 
         # if the query matches any entry in ignored_queries,
         # throw out the match
@@ -307,36 +311,41 @@ class CsvReconciler(object):
             results = response['result']
             matching_results = [
                 result for result in results if result['match']]
-            num_matches = len(matching_results)
+            match_num = len(matching_results)
 
             # I think that number of matches must be 0 or 1
             # otherwise: a bug in the reconciler
-            assert num_matches < 2
+            assert match_num < 2
 
-            if num_matches == 1:
+            if (match_num == 1) or (self.match_top_candidate and len(results)):
                 match_name = results[0]['name']
                 match_id = results[0]['id']
             else:
                 match_name = ''
                 match_id = ''
 
-            row['match_num'] = num_matches
-            row['match_name'] = match_name
-            row['match_id'] = match_id
+            row[f"{self.match_column_prefix}candidates_count"] = len(results)
+
+            row[f"{self.match_column_prefix}match_num"] = match_num
+            row[f"{self.match_column_prefix}match_name"] = match_name
+            row[f"{self.match_column_prefix}match_id"] = match_id
 
             # eliminate results in which the query is ignored_queries,
 
             if row[self.query] in self.ignored_queries_set:
-                row['match_num'] = 0
-                row['match_name'] = ''
-                row['match_id'] = ''
+                row[f"{self.match_column_prefix}match_num"] = 0
+                row[f"{self.match_column_prefix}match_name"] = ''
+                row[f"{self.match_column_prefix}match_id"] = ''
 
             yield (row)
 
     def to_csv(self, csvfile, rows, fieldnames=None):
         if fieldnames is None:
             fieldnames = (self.reader.fieldnames +
-                          ['match_num', 'match_name', 'match_id'])
+                          [f"{self.match_column_prefix}match_num",
+                           f"{self.match_column_prefix}match_name",
+                           f"{self.match_column_prefix}match_id",
+                           f"{self.match_column_prefix}candidates_count"])
 
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
