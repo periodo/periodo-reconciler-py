@@ -196,6 +196,11 @@ class PeriodoReconciler(object):
 
 
 class CsvReconciler(object):
+
+    match_column_fields = (
+        'match_num', 'match_name', 'match_id',
+        'candidates_count')
+
     def __init__(self, csvfile, p_recon, query,
                  location=None, start=None, stop=None,
                  ignored_queries='',
@@ -245,6 +250,13 @@ class CsvReconciler(object):
             'start': start,
             'stop': stop
         })
+
+        # compute the columns names for the match results, which
+        # have an optional prefix (match_column_prefix)
+
+        self.match_column_names = OrderedDict(
+            [(name, f"{self.match_column_prefix}{name}")
+             for name in CsvReconciler.match_column_fields])
 
     def _transpose_query(self, q):
         """
@@ -300,7 +312,7 @@ class CsvReconciler(object):
 
         # assume that the new match_* names are not already field names
         assert len(set(self.reader.fieldnames) &
-                   set(['match_num', 'match_name', 'match_id'])) == 0
+                   set(self.match_column_names.values())) == 0
 
         # return matches from the entire CSV if
         # we're not processing the inputted subset of results
@@ -324,28 +336,27 @@ class CsvReconciler(object):
                 match_name = ''
                 match_id = ''
 
-            row[f"{self.match_column_prefix}candidates_count"] = len(results)
+            row[self.match_column_names['candidates_count']] = len(results)
 
-            row[f"{self.match_column_prefix}match_num"] = match_num
-            row[f"{self.match_column_prefix}match_name"] = match_name
-            row[f"{self.match_column_prefix}match_id"] = match_id
+            row[self.match_column_names["match_num"]] = match_num
+            row[self.match_column_names["match_name"]] = match_name
+            row[self.match_column_names["match_id"]] = match_id
 
-            # eliminate results in which the query is ignored_queries,
+            # eliminate results in which the query is in ignored_queries
 
             if row[self.query] in self.ignored_queries_set:
-                row[f"{self.match_column_prefix}match_num"] = 0
-                row[f"{self.match_column_prefix}match_name"] = ''
-                row[f"{self.match_column_prefix}match_id"] = ''
+                row[self.match_column_names["match_num"]] = 0
+                row[self.match_column_names["match_name"]] = ''
+                row[self.match_column_names["match_id"]] = ''
 
             yield (row)
 
     def to_csv(self, csvfile, rows, fieldnames=None):
         if fieldnames is None:
-            fieldnames = (self.reader.fieldnames +
-                          [f"{self.match_column_prefix}match_num",
-                           f"{self.match_column_prefix}match_name",
-                           f"{self.match_column_prefix}match_id",
-                           f"{self.match_column_prefix}candidates_count"])
+            fieldnames = (
+                self.reader.fieldnames +
+                list(self.match_column_names.values())
+                )
 
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
