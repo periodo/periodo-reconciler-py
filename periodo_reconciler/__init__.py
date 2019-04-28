@@ -3,7 +3,7 @@ import requests
 import io
 import json
 import uuid
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict, Counter
 import urllib.parse
 from functools import lru_cache
 
@@ -199,7 +199,8 @@ class CsvReconciler(object):
 
     match_column_fields = (
         'match_num', 'match_name', 'match_id',
-        'candidates_count')
+        'candidates_count',
+        'match_fallback_id', 'match_fallback_name')
 
     def __init__(self, csvfile, p_recon, query,
                  location=None, start=None, stop=None,
@@ -305,7 +306,7 @@ class CsvReconciler(object):
                 # print ('\r results_with_rows', i, label, end="")
                 yield(row, responses[label])
 
-    def matches(self, results_with_rows=None):
+    def _matches(self, results_with_rows=None):
         """
         this method process the results to return only matches
         """
@@ -318,6 +319,10 @@ class CsvReconciler(object):
         # we're not processing the inputted subset of results
         if results_with_rows is None:
             results_with_rows = self.results_with_rows()
+
+        # compute a counter on the matches in the loop
+        # mapping query to match_id, match_name
+        self.matches_for_query = defaultdict(Counter)
 
         for (row, response) in results_with_rows:
             results = response['result']
@@ -332,6 +337,12 @@ class CsvReconciler(object):
             if (match_num == 1) or (self.match_top_candidate and len(results)):
                 match_name = results[0]['name']
                 match_id = results[0]['id']
+
+                # keep track of how many times a given query
+                # maps to a (match_id, match_name) tuple
+                (self.matches_for_query[row[self.query]]
+                    .update([(match_id, match_name)]))
+
             else:
                 match_name = ''
                 match_id = ''
@@ -341,6 +352,8 @@ class CsvReconciler(object):
             row[self.match_column_names["match_num"]] = match_num
             row[self.match_column_names["match_name"]] = match_name
             row[self.match_column_names["match_id"]] = match_id
+            row[self.match_column_names["match_fallback_id"]] = ''
+            row[self.match_column_names["match_fallback_name"]] = ''
 
             # eliminate results in which the query is in ignored_queries
 
@@ -350,6 +363,31 @@ class CsvReconciler(object):
                 row[self.match_column_names["match_id"]] = ''
 
             yield (row)
+
+    def matches(self, results_with_rows=None):
+        """
+        _matches is the first pass
+        """
+
+        rows = list(self._matches(results_with_rows))
+
+        # let's now calculate fallback for rows
+        # without matches
+        for row in rows:
+            if not row[self.match_column_names["match_id"]]:
+                # set as fallback as the most common match
+                # for the same query term
+                query = row[self.query]
+                c = self.matches_for_query[query].most_common(1)
+                if len(c):
+                    (match_id, match_name) = c[0]
+                    row[(self
+                        .match_column_names["match_fallback_id"])] = match_id
+                    row[(self
+                        .match_column_names
+                        ["match_fallback_name"])] = match_name
+
+            yield row
 
     def to_csv(self, csvfile, rows, fieldnames=None):
         if fieldnames is None:
