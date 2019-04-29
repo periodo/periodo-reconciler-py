@@ -259,6 +259,9 @@ class CsvReconciler(object):
             [(name, f"{self.match_column_prefix}{name}")
              for name in CsvReconciler.match_column_fields])
 
+        # initialize a summary count of the matches
+        self.match_summary = Counter()
+
     def _transpose_query(self, q):
         """
         transpose only if there is a single ","
@@ -370,6 +373,7 @@ class CsvReconciler(object):
         """
 
         rows = list(self._matches(results_with_rows))
+        self.match_summary = Counter()
 
         # let's now calculate fallback for rows
         # without matches
@@ -380,13 +384,25 @@ class CsvReconciler(object):
                 query = row[self.query]
                 c = self.matches_for_query[query].most_common(1)
                 if len(c):
-                    (match_id, match_name) = c[0]
+                    ((match_id, match_name), count) = c[0]
                     row[(self
-                        .match_column_names["match_fallback_id"])] = match_id
+                         .match_column_names["match_fallback_id"])] = match_id
                     row[(self
-                        .match_column_names
-                        ["match_fallback_name"])] = match_name
+                         .match_column_names
+                         ["match_fallback_name"])] = match_name
 
+            self.match_summary.update([(
+                row[self.query],
+                row[self.location] if self.location is not None else '',
+                row[self.start] if self.start is not None else '',
+                row[self.stop] if self.stop is not None else '',
+                row[self.match_column_names["match_num"]],
+                row[self.match_column_names["match_name"]],
+                row[self.match_column_names["match_id"]],
+                row[self.match_column_names["candidates_count"]],
+                row[self.match_column_names["match_fallback_id"]],
+                row[self.match_column_names["match_fallback_name"]]
+            )])
             yield row
 
     def to_csv(self, csvfile, rows, fieldnames=None):
@@ -394,10 +410,25 @@ class CsvReconciler(object):
             fieldnames = (
                 self.reader.fieldnames +
                 list(self.match_column_names.values())
-                )
+            )
 
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         writer.writeheader()
         for row in rows:
+            writer.writerow(row)
+
+    def match_summary_to_csv(self, output):
+        """
+        return self.self.match_summary as CSV
+        """
+
+        headers = (['query', 'location', 'start', 'stop'] +
+                   list(CsvReconciler.match_column_fields) + ['row_count'])
+
+        writer = csv.DictWriter(output, fieldnames=headers)
+
+        writer.writeheader()
+        for (v, c) in self.match_summary.most_common():
+            row = OrderedDict(zip(headers, list(v) + [c]))
             writer.writerow(row)

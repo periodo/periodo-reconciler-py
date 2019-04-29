@@ -14,7 +14,7 @@ import click
 @click.command()
 @click.argument('input', type=click.File('r'))
 @click.argument('output', type=click.File('w'))
-@click.option('--query', prompt=True,
+@click.option('--query', required=True,
               help='column of query')
 @click.option('--start', default=None,
               help='column of start')
@@ -30,9 +30,13 @@ import click
               help='optional prefix for match related columns')
 @click.option('--match_top_candidate/--no-match_top_candidate', default=True,
               help='accept top reconciliation candidate as match')
+@click.option('--match_summary_output', default=None,
+              type=click.File('w'),
+              help='optional CSV output for a summary of the matches')
 def reconcile(input, output, query, start, stop, location,
               ignored_queries, transpose_query,
-              match_column_prefix, match_top_candidate):
+              match_column_prefix, match_top_candidate,
+              match_summary_output):
     """
     This script reconciles the INPUT csv file
     to produce the OUTPUT csv file.
@@ -55,6 +59,9 @@ def reconcile(input, output, query, start, stop, location,
     matches = list(c_recon.matches())
 
     c_recon.to_csv(output, matches)
+
+    if match_summary_output is not None:
+        c_recon.match_summary_to_csv(match_summary_output)
 
 
 if __name__ == '__main__':

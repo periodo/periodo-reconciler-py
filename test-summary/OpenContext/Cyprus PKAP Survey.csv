@@ -1,0 +1,80 @@
+query,location,start,stop,match_num,match_name,match_id,candidates_count,match_fallback_id,match_fallback_name,row_count
+Ancient Historic,Cyprus,-750,749,0,"Ancient Historic [Cyprus, Cyprus: -0749 to 0749]",http://n2t.net/ark:/99152/p0dg76fxkgg,2,,,2665
+"Roman, Late",Cyprus,300,749,1,"Late Roman [Cyprus, Cyprus: 0300 to 0749]",http://n2t.net/ark:/99152/p0dg76fbqff,1,,,2594
+Roman,Cyprus,-99,749,0,"Roman [Cyprus, Cyprus: -0098 to 0749]",http://n2t.net/ark:/99152/p0dg76fx784,5,,,766
+Late Bronze Age-Hellenistic,Cyprus,-1650,-100,0,"Late Bronze Age (= Late Cypriot) [Cyprus, Cyprus: -1649 to -1049]",http://n2t.net/ark:/99152/p083p5rpb46,24,,,384
+,Cyprus,300,749,0,,,0,,,216
+Iron Age,Cyprus,-1050,-312,0,"Iron Age [Cyprus, Cyprus: -1049 to -0311]",http://n2t.net/ark:/99152/p0dg76f6zd3,10,,,201
+Unknown,Cyprus,-9000,-9000,1,"Unknown [Cyprus, Cyprus: -8999 to 2008]",http://n2t.net/ark:/99152/p0dg76f2smn,1,,,179
+Hellenistic,Cyprus,-311,-100,0,"Hellenistic [Cyprus, Cyprus: -0310 to -0099]",http://n2t.net/ark:/99152/p0dg76fqj57,11,,,130
+Hellenistic-Early Roman,Cyprus,-311,299,0,"Hellenistic-Early Roman [Cyprus, Cyprus: -0310 to 0299]",http://n2t.net/ark:/99152/p0dg76fk9wq,12,,,130
+"Roman, Early",Cyprus,-99,299,0,"Early Roman [Cyprus, Cyprus: -0098 to 0299]",http://n2t.net/ark:/99152/p0dg76fpqkt,2,,,125
+Modern,Cyprus,1878,1878,0,"Modern (AD 1700-Present) [Afghanistan, Albania, Algeria, Armenia, Austria, Azerbaijan, Bahrain, Bangladesh, Belgium, Bosnia and Herzegovina, Bulgaria, China, Croatia, Cyprus, Czech Republic, Democratic Republic of the Congo, Djibouti, Egypt, Eritrea, Ethiopia, Faroe Islands, France, Georgia, Germany, Gibraltar, Greece, Guernsey, Hungary, India, Iran, Iraq, Ireland, Isle of Man, Israel, Italy, Jersey, Jordan, Kazakhstan, Kenya, Lebanon, Libya, Lithuania, Luxembourg, Macedonia, Malta, Montenegro, Morocco, Myanmar [Burma], Netherlands, Oman, Pakistan, Palestine, Poland, Portugal, Republic of the Congo, Romania, Russia, San Marino, Saudi Arabia, Serbia, Slovakia, Slovenia, Somalia, Spain, Sudan, Switzerland, Syria, Tajikistan, Tunisia, Turkey, Ukraine, United Kingdom, Uzbekistan, Vatican City, Yemen: 1700 to 2100]",http://n2t.net/ark:/99152/p03wskdgh6j,8,,,101
+Medieval-Modern,Cyprus,1191,1191,0,"Medieval [Cyprus, Cyprus: 0750 to 1570]",http://n2t.net/ark:/99152/p0dg76f5ndh,6,,,93
+Ancient-Medieval,Cyprus,-3500,1570,1,"Ancient-Medieval [Cyprus, Cyprus: -3499 to 1570]",http://n2t.net/ark:/99152/p0dg76fjh5t,1,,,92
+Unknown,Cyprus,-2500,-2500,1,"Unknown [Cyprus, Cyprus: -8999 to 2008]",http://n2t.net/ark:/99152/p0dg76f2smn,1,,,76
+Unknown,Cyprus,FALSE,FALSE,0,,,0,http://n2t.net/ark:/99152/p0dg76f2smn,"Unknown [Cyprus, Cyprus: -8999 to 2008]",70
+Post-Prehistoric,Cyprus,-999,-999,1,"Post-Prehistoric [Cyprus, Cyprus: -0998 to 2008]",http://n2t.net/ark:/99152/p0dg76f98q7,1,,,60
+Late Cypriot II-Late Cypriot III,Cyprus,-1450,-1050,0,"Late Cypriot II-Late Cypriot III [Cyprus, Cyprus: -1449 to -1049]",http://n2t.net/ark:/99152/p0dg76f664z,7,,,55
+Classical-Roman,Cyprus,-474,749,0,"Classical-Roman [Cyprus, Cyprus: -0473 to 0749]",http://n2t.net/ark:/99152/p0dg76frgs8,12,,,48
+Archaic-Hellenistic,Cyprus,-750,-100,0,"Archaic-Hellenistic [Cyprus, Cyprus: -0749 to -0099]",http://n2t.net/ark:/99152/p0dg76f4rhx,19,,,40
+,Cyprus,-750,749,0,,,0,,,40
+Classical-Hellenistic,Cyprus,-474,-100,0,"Classical-Hellenistic [Cyprus, Cyprus: -0473 to -0099]",http://n2t.net/ark:/99152/p0dg76fkv78,18,,,39
+Ancient,Cyprus,-9000,749,1,"Ancient [Cyprus, Cyprus: -8999 to 0749]",http://n2t.net/ark:/99152/p0dg76fj92d,1,,,28
+"Modern, Present",Cyprus,1949,1950,0,"Modern [Cyprus, Cyprus: 1870 to 2008]",http://n2t.net/ark:/99152/p0dg76fqd7r,9,,,25
+Archaic,Cyprus,-750,-475,0,"Archaic [Cyprus, Cyprus: -0749 to -0474]",http://n2t.net/ark:/99152/p0dg76fwn27,9,,,25
+,Cyprus,-99,749,0,,,0,,,25
+,Cyprus,FALSE,FALSE,0,,,0,,,18
+Late Cypriot II,Cyprus,-1450,-1200,0,"Late Cypriot II [Cyprus, Cyprus: -1449 to -1199]",http://n2t.net/ark:/99152/p0dg76fgb4s,5,,,16
+,Cyprus,-99,299,0,,,0,,,15
+,Cyprus,-750,-100,0,,,0,,,15
+Classical,Cyprus,-474,-312,0,"Classical (Greco-Roman; 550 BC-330 BC) [Afghanistan, Albania, Algeria, Armenia, Austria, Azerbaijan, Bosnia and Herzegovina, Bulgaria, Croatia, Cyprus, Czech Republic, Egypt, France, Georgia, Germany, Gibraltar, Greece, Hungary, India, Iran, Iraq, Israel, Italy, Jordan, Kenya, Kosovo, Kuwait, Kyrgyzstan, Lebanon, Libya, Macedonia, Malta, Moldova, Monaco, Montenegro, Morocco, Oman, Pakistan, Palestine, Portugal, Romania, Russia, Saudi Arabia, Serbia, Slovenia, Somalia, Spain, Sudan, Switzerland, Syria, Tajikistan, Tunisia, Turkey, Turkmenistan, Ukraine, United Kingdom, Uzbekistan, Yemen: -0550 to -0330]",http://n2t.net/ark:/99152/p03wskd389m,8,,,14
+"Medieval, Late",Cyprus,1191,1570,0,"Late Medieval [Cyprus, Cyprus: 1191 to 1570]",http://n2t.net/ark:/99152/p0dg76f3dgt,2,,,14
+,Cyprus,1191,1191,0,,,0,,,12
+Cypro-Geometric,Cyprus,-1050,-751,0,"Cypro-Geometric [Cyprus, Cyprus: -1049 to -0750]",http://n2t.net/ark:/99152/p0dg76fwddc,2,,,9
+Geometric,Cyprus,-1050,-751,0,"Geometric (Cypro-Geometric) II [Cyprus, Cyprus: -0950 to -0851]",http://n2t.net/ark:/99152/p0qhb66dbmx,7,,,8
+Medieval,Cyprus,750,1570,0,"Medieval [Cyprus, Cyprus: 0750 to 1570]",http://n2t.net/ark:/99152/p0dg76f5ndh,3,,,7
+Ottoman,Cyprus,1571,1877,0,"Ottoman [Cyprus, Cyprus: 1571 to 1877]",http://n2t.net/ark:/99152/p0dg76fv3nv,5,,,7
+Bronze Age,Cyprus,-2500,-1000,0,"Bronze Age [Cyprus, Cyprus: -2499 to -0999]",http://n2t.net/ark:/99152/p0dg76fgnjp,8,,,6
+Late Cypriot,Cyprus,-1650,-1050,0,"Late Bronze Age (= Late Cypriot) [Cyprus, Cyprus: -1649 to -1049]",http://n2t.net/ark:/99152/p083p5rpb46,7,,,6
+,Cyprus,1191,1570,0,,,0,,,6
+Late Helladic-Modern Present,Cyprus,-1700,-1700,1,"Bronze Age-Modern Present [Cyprus, Cyprus: -2499 to 2008]",http://n2t.net/ark:/99152/p0dg76f6gfq,1,,,5
+Late Cypriot-Roman,Cyprus,-1650,749,0,"Late Cypriot-Roman	 [Cyprus, Cyprus: -1649 to 0749]",http://n2t.net/ark:/99152/p0dg76f6jkf,11,,,5
+Ancient,Cyprus,-3500,749,1,"Ancient [Cyprus, Cyprus: -8999 to 0749]",http://n2t.net/ark:/99152/p0dg76fj92d,1,,,5
+"Modern, Early",Cyprus,1878,1949,1,"Early Modern [Cyprus, Cyprus: 1878 to 1949]",http://n2t.net/ark:/99152/p0dg76fcnx9,1,,,4
+Classical,Cyprus,-750,-475,0,"Archaic-Classical [Cyprus, Cyprus: -0749 to -0311]",http://n2t.net/ark:/99152/p0dg76fk4nc,6,,,4
+Cypro-Archaic,Cyprus,-750,-312,1,Cypro-Archaic [Cyprus: -0749 to -0449],http://n2t.net/ark:/99152/p08m57h2cv3,1,,,3
+Archaic-Classical,Cyprus,-750,-312,0,"Archaic-Classical [Cyprus, Cyprus: -0749 to -0311]",http://n2t.net/ark:/99152/p0dg76fk4nc,16,,,3
+Roman-Modern,Cyprus,-99,-99,1,"Roman-Modern [Cyprus, Cyprus: -0098 to 2008]",http://n2t.net/ark:/99152/p0dg76fd4wb,1,,,3
+,Cyprus,-1050,-751,0,,,0,,,3
+,Cyprus,-474,-100,0,,,0,,,3
+,Cyprus,-1050,-312,0,,,0,,,3
+,Cyprus,-311,-100,0,,,0,,,3
+Geometric-Archaic,Cyprus,-1050,-475,0,"Geometric (Cypro-Geometric) III [Cyprus, Cyprus: -0849 to -0749]",http://n2t.net/ark:/99152/p0jtbzw932g,16,,,2
+Hellenistic-Roman,Cyprus,-311,749,0,"Hellenistic-Roman [Cyprus, Cyprus: -0310 to 0749]",http://n2t.net/ark:/99152/p0dg76f4hkq,15,,,2
+Late Cypriot-Archaic,Cyprus,-1650,-475,0,"Late Cypriot-Archaic [Cyprus, Cyprus: -1649 to -0474]",http://n2t.net/ark:/99152/p0dg76fvqdg,15,,,2
+,Cyprus,-474,-312,0,,,0,,,2
+,Cyprus,-750,-475,0,,,0,,,2
+Ceramic Age,Cyprus,-1700,-1700,1,"Ceramic Age [Cyprus, Cyprus: -3499 to 2008]",http://n2t.net/ark:/99152/p0dg76fzg6j,1,,,1
+"Medieval, Ottoman/Venetian",Cyprus,1191,1877,0,"Late Medieval-Ottoman [Cyprus, Cyprus: 1191 to 1877]",http://n2t.net/ark:/99152/p0dg76f2kc2,11,,,1
+Medieval,Cyprus,1191,1570,0,"Medieval [Cyprus, Cyprus: 0750 to 1570]",http://n2t.net/ark:/99152/p0dg76f5ndh,3,,,1
+Cypro-Archaic,Cyprus,-750,-475,1,Cypro-Archaic [Cyprus: -0749 to -0449],http://n2t.net/ark:/99152/p08m57h2cv3,1,,,1
+"Medieval, Early",Cyprus,1191,1570,1,"Early Medieval [Cyprus, Cyprus: 0750 to 1190]",http://n2t.net/ark:/99152/p0dg76fq5c5,1,,,1
+"Medieval, Ottoman/Venetian",Cyprus,1571,1877,0,"Ottoman [Cyprus, Cyprus: 1571 to 1877]",http://n2t.net/ark:/99152/p0dg76fv3nv,10,,,1
+"Roman, Late",Cyprus,FALSE,FALSE,0,,,0,http://n2t.net/ark:/99152/p0dg76fbqff,"Late Roman [Cyprus, Cyprus: 0300 to 0749]",1
+Ancient Historic-Medieval,Cyprus,-750,1570,0,"Ancient Historic-Medieval [Cyprus, Cyprus: -0749 to 1570]",http://n2t.net/ark:/99152/p0dg76f83qp,4,,,1
+Late Roman,Cyprus,300,749,1,"Late Roman [Cyprus, Cyprus: 0300 to 0749]",http://n2t.net/ark:/99152/p0dg76fbqff,1,,,1
+"Medieval, Early",Cyprus,750,1190,1,"Early Medieval [Cyprus, Cyprus: 0750 to 1190]",http://n2t.net/ark:/99152/p0dg76fq5c5,1,,,1
+Ceramic Age,Cyprus,-3500,-3500,1,"Ceramic Age [Cyprus, Cyprus: -3499 to 2008]",http://n2t.net/ark:/99152/p0dg76fzg6j,1,,,1
+Iron Age-Classical,Cyprus,-1050,-312,0,"Iron Age [Cyprus, Cyprus: -1049 to -0311]",http://n2t.net/ark:/99152/p0dg76f6zd3,18,,,1
+Protogeometric-Hellenistic,Cyprus,-1050,-100,0,"Protogeometric-Hellenistic [Cyprus, Cyprus: -1049 to -0099]",http://n2t.net/ark:/99152/p0dg76f5cnh,11,,,1
+Classical-Hellenistic,Cyprus,FALSE,FALSE,0,,,0,http://n2t.net/ark:/99152/p0dg76fkv78,"Classical-Hellenistic [Cyprus, Cyprus: -0473 to -0099]",1
+Unknown,Cyprus,-311,-311,1,"Unknown [Cyprus, Cyprus: -8999 to 2008]",http://n2t.net/ark:/99152/p0dg76f2smn,1,,,1
+,Cyprus,1878,1878,0,,,0,,,1
+,Cyprus,-474,749,0,,,0,,,1
+,Cyprus,-311,299,0,,,0,,,1
+,Cyprus,-999,-999,0,,,0,,,1
+,Cyprus,-9000,-9000,0,,,0,,,1
+,Cyprus,1571,1877,0,,,0,,,1
+,Cyprus,750,1570,0,,,0,,,1
+,Cyprus,-2500,-1000,0,,,0,,,1
