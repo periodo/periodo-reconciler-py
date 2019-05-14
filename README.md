@@ -1,5 +1,5 @@
 # periodo-reconciler-py
-a Python wrapper around https://github.com/periodo/periodo-reconciler
+a Python wrapper around [periodo/periodo-reconciler: Open Refine reconciliation service for PeriodO data](https://github.com/periodo/periodo-reconciler)
 
 # How to run the CSV reconciler on the test data
 

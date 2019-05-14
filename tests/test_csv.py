@@ -1,6 +1,7 @@
 import json
 import csv
 import os
+import io
 import pytest
 from periodo_reconciler import (
     RProperty,
@@ -99,3 +100,30 @@ def test_transpose_query(p_recon):
 
     rows = OrderedDict([(row['query'], row) for row in c_recon.matches()])
     assert rows['Late Roman']['match_id'] != rows['Roman, Late']['match_id']
+
+
+def test_match_summary_to_csv(p_recon):
+
+    """
+    test functionality to produce summary stats of
+    reconciliation
+    """
+
+    csv_path = "test-data/periodo_simple_example.csv"
+    csvfile = open(csv_path)
+    c_recon = CsvReconciler(csvfile, p_recon, 'query',
+                            'location', 'start', 'end',
+                            transpose_query=True)
+
+    rows = OrderedDict([(row['query'], row) for row in c_recon.matches()])
+    match_summary_output = io.StringIO()
+
+    c_recon.match_summary_to_csv(match_summary_output)
+
+    # read the summary CSV back in and
+    # confirm that there is only one
+    # of each input tuple
+    summary_reader = (csv.DictReader(
+        io.StringIO(match_summary_output.getvalue())))
+    for row in summary_reader:
+        assert int(row['row_count']) == 1

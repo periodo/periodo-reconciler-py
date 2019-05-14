@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = ">=2.20.0"
+click = ">=7.0"
+periodo_reconciler = {git = "ssh://github.com/rdhyee/periodo-reconciler-py.git"}
+
+[dev-packages]
+pytest = ">=2.8"
+pytest-cov = "*"
+pycodestyle = "*"
+jinja2 = "*"
+jupyter = "*"
+pandas = "*"
+
+[requires]
+python_version = "3.6"
